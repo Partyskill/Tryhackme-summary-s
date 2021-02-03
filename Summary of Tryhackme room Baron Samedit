@@ -1,0 +1,43 @@
+CVE-2021-3156
+This is a new Unix sudo vulnerability discovered in january 2021.
+This is a heap buffer overflow allowing any user to escalate privileges to root. This exploit will work with the default settings, 
+for any user regardless of sudi permissions. At this moment the vulnerability has been patched, 
+but affect any unpatched version of the sudi program from 1.8.2-1.8.31p2 1.9.0-1.9.5p1, so this vulnerability has been around for atleast 10 years from now.
+Compared with the CVE-2019-18634 this vulnerability is a buffer overflow in the sudo program. 
+However this time the vulnerability is a heap buffer overflow. The stack is a very regimented section 
+of memory which stores various important aspects of a program. The heap is reserved for dynamic allocation of memory, 
+allowing for more flexibility in how values and constructs are created and accessed by a program. 
+
+Exploiting sudo with CVE-2021-3156
+First of all, check the system for the vulnerability. There is an easy method to check this.
+$ sudoedit -s '\' $(python3 -c 'print("A"*1000)')
+First section = sudoedit  the man page shows it as sudo with -e flag, this option indicates that, instead 
+of running a command, the user wishes to edit one or more files. In lieu (place) of a command, the string "sudoedit" is 
+used when consulting the security policy. If the user is authorized by the policy, the following steps are taken.
+
+If the system is vulnerable to the sudo vulnerability, the output of this command will be this.
+# malloc(): memory corruption
+# Aborted (core dumped)
+If the system is patched te output will be
+# usage: sudoedit [-AknS] [-r role] etc...
+
+On Exploit-db download the CVE (Link in literature), compile the file. Compile will mean that the 
+compiler will examine the functions in the script. Right now it is easy because we can automatically compile the exploit by the command 'make' 
+$  make
+When the system is done compiling, simpily input a command.
+$ ./exploit-name [target]
+The target can be 
+0 (ubuntu 18.04 (Bionic Beaver) with sudo 1.8.21, libc-2.27)
+1 (Ubuntu 20.04.1 (Focal Fossa) with sudo 1.8.31, libc-2.31)
+2 (Debian 10.0 (Buster) with sudo 1.8.27, libc-2.28)
+Done.
+
+($) stand for a input command.
+(#) stand for output.
+
+
+
+Literature
+
+https://www.exploit-db.com/exploits/49521
+https://tryhackme.com/room/sudovulnssamedit
