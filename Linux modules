@@ -1,0 +1,16 @@
+Linux modules
+
+du “Disk Usage”
+This command will helps you identify what files/directories are consuming the space on the disk.
+With this command you can use some helpfull flags like:
+
+-a  This flag will list all the files and folders.
+-h This flag will list the file sizes in readable format like Bytes MegaBytes and so on
+-c This flag will print the total size after running DU on a specific folder/folders
+-d {Number} This flag will specify the depthness of a directory you want to view
+--time This flag will show the results with a specific time stamp.
+
+These flags are mostly used, but if you run ‘du –help’ there are alot more flags and you can be more specified with the output of the command. Pretty nice and helpfull command.
+
+Next we are going to talk about the command 'grep'. This tool filters an output from another command, a very simple example is when you use the 'ls -la' command and you need 
+one file/folder you can use the grep command like this 'ls -la | grep {name}'. But thats not all, you can also use the grep command to filter a text file.
