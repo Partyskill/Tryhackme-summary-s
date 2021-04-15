@@ -1,0 +1,81 @@
+Core Windows processes
+
+The Windows operating system is clearly the most used in the world (whether people like it or not), and the majority of its users don't fully understand its interworkings. Users are simply content that it works, like anything complex such as a car. It starts, and you can drive from point A to point B. In regards to computers, if they can surf the web, read/answer emails, shop, listen to music, watch movies, etc., then all is well. It took a long time for users to grasp the need for antivirus programs fully. Only when one of their basic everyday computer functions were disrupted is when antivirus mattered. Antivirus was enough, say over 5-7 years ago. Time changes everything. Malware and attacks have evolved, and antivirus is no longer enough. As a matter of fact, antivirus has struggled to keep up, and that is solely based on how it's designed to catch 'evil'.
+Today antivirus is just 1 solution within the layered defensive approach. New security tools, such as EDR (Endpoint Detection and Response), have been created because antivirus cannot catch every malicious binary and processes running on the endpoint.
+But guess what? Even with these new tools, it is still not 100% effective. Attackers can still bypass the defenses running on the endpoint. This is where we come in. Whether you're a Security Analyst, SOC Analyst, Detection Engineer, Threat Hunter, etc., if one of the tools alerts us of a suspicious binary or process, we must investigate and decide on a course of action. Knowing what normal behavior with the systems that we have to defend, a Windows system (in this case) is, we can infer if the binary or process is benign or evil.
+
+Task manager
+
+This is a build-in GUI-based Windows utility that allows users to see what is running on the system. It also provides information on resource usage, such as how much CPU and memory are utilized by each process.
+Within the Processes tab, you can see all the processes that are running on the system. 
+You can change the collum with adding or remove collums like : 
+    • Type - Each process falls into 1 of 3 categories (Apps, Background process, or Windows process).
+    • Publisher - Think of this column as the name of the author of the program/file.
+    • PID - This is known as the process identifier number. Windows assigns a unique process identifier each time a program starts. If the same program has multiple processes running, each will have its own unique process identifier (PID).
+    • Process name - This is the file name of the process. In the above image, the file name for Task Manager is Taskmrg.exe.
+    • Command line - The full command used to launch the process.
+    • CPU - The amount of CPU (processing power) used by the process.
+    • Memory - The amount of physical working memory utilized by the process.
+
+The next tab to know is the Details tab, here you can view some of the core processes.
+To get more information you can enable or add collums, the most important collums to add are the Image path name adn the commandline colums. Pretty cool :D
+
+
+
+
+
+
+Ok, let’s talk about a tool that can help alot while doing recon on a process. This tool is named Process Hacker, what the site say’s ‘A free, powerful, multi-purpose tool that helps you monitor system resources, debug software and detect malware.’ 
+
+Process Hacker is a tool that can be used to identify and terminate running processes. Process Hacker has been seen in the advanced stages of attacks, where it is used by an attacker with remote access (eg over RDP) to terminate security and logging software prior to deploying a malicious payload, often ransomware. 
+
+System
+The first Windows process on the list is System. It was mentioned in a previous section that a PID for any given process is assigned at random, but that is not the case for the System process. The PID for System is always 4. What does this process do exactly?
+
+The official definition from Windows Internals 6th Edition:
+
+"The System process (process ID 4) is the home for a special kind of thread that runs only in kernel mode a kernel-mode system thread. System threads have all the attributes and contexts of regular user-mode threads (such as a hardware context, priority, and so on) but are different in that they run only in kernel-mode executing code loaded in system space, whether that is in Ntoskrnl.exe or in any other loaded device driver. In addition, system threads don't have a user process address space and hence must allocate any dynamic storage from operating system memory heaps, such as a paged or nonpaged pool."
+
+
+What about the smss.exe?
+
+This is the session manager subsystem. This process, also knows as the windows session manager, is responsible for creating ew sessions. This is the first user mode process started by the kernel.
+This process starts the kernel and user mode of the Windows subsystem. This subsystem includes win32k.sys (Kernel mode), winsrv.dll (User mode) and csrss.exe (User mode).
+
+The smss.exe starts the csrss.exe and wininit.exe in session 0, an isolated Windows session for the OS, and csrss.exe and winlogon.exe for session 1, which is the user session. The first child instance creates child instances in new sessions. This is done by smss.exe copying itself into the new session and self-terminating. 
+Any other subsystem listed in the required value of HKLM\System\Currentcontrolset\Control\Session manager\Subsystem is also launched
+
+Little bit messy explaining tho
+
+
+
+
+
+
+
+
+
+
+Further we got the Csrss.exe (known as a Client/server Runtime Subsystem)
+
+As mentioned before the csrss.exe is the user-mode side of the Windows subsystem. This process is always running and is critical to the system operation. If by chance this process is terminated it will result in system failure. This process is responsible for the Win32 console window and process thread creation and deletion. For each instance csrsrv.dll, basesrv.dll and winsrv.dll are loaded.
+This process is also responsible for making Windows API availible to other processes, mapping drive letters and handling the Windows shutdown process.
+
+
+Next on we have the wininit.exe (known as a start-up process (critical process))
+
+The Windows initialization process, is responsible for launching services.exe (service controll manager), lsass.exe (Local Security Authority) and lsaiso.exe within session 0. This is another critical Windows process that runs in the background, along with its child processes.
+Little thing to know is that lsaiso.exe is a process associated with Credential Guard and Key Guard. You will only see this process if Credential Guard is enabled.
+
+Nice :)
+
+
+
+
+Reference:
+
+https://tryhackme.com/room/btwindowsinternals   credits to Heavenraiza : https://tryhackme.com/p/heavenraiza
+
+
+
+
